@@ -4,6 +4,7 @@ import com.diamonddetail.api.entities.UserEntity;
 import com.diamonddetail.api.record.UserResponseDTO;
 import com.diamonddetail.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +35,19 @@ public class UserController {
     }
 
     @GetMapping("/user-list")
-    public List<UserResponseDTO> listUsers(){
+    public ResponseEntity<?> listUsers(){
        List<UserEntity> users = userRepository.findAll();
 
-       return users.stream().map(user -> new UserResponseDTO(
+       if(users == null || users.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum usuário encontrado!");
+       }
+
+       List<UserResponseDTO> response = users.stream().map(user -> new UserResponseDTO(
                user.getName(),
                user.getEmail(),
                user.getType()
        )).toList();
+
+       return ResponseEntity.ok(response);
     }
 }

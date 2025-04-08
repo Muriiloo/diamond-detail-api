@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -22,7 +21,7 @@ public class ProductEntity {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Integer id;
     private String name;
     private Integer amount;
     private String description;

@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Setter
@@ -20,7 +19,7 @@ public class ServiceEntity {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Integer id;
     private String name;
     private BigDecimal price;
 

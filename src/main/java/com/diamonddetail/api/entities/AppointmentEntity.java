@@ -10,7 +10,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,7 +21,7 @@ public class AppointmentEntity {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Integer id;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
 

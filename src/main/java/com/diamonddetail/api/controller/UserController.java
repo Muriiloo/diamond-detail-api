@@ -21,36 +21,44 @@ public class UserController {
 
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@RequestBody UserEntity user) {
-        if(user.getName() == null || user.getName().isBlank()){
-            return ResponseEntity.badRequest().body("Nome é obrigatório!");
-        }
+        try{
+            if(user.getName() == null || user.getName().isBlank()){
+                return ResponseEntity.badRequest().body("Nome é obrigatório!");
+            }
 
-        if(user.getName().length() < 3){
-            return ResponseEntity.badRequest().body("Nome precisa ter mais de 4 letras!");
-        }
+            if(user.getName().length() < 3){
+                return ResponseEntity.badRequest().body("Nome precisa ter mais de 4 letras!");
+            }
 
-        if(!user.getName().matches("^[a-zA-ZÀ-ÿ\\\\s]+$")){
-            return ResponseEntity.badRequest().body("Nome não pode ter caracteres especiais!");
-        }
+            if(!user.getName().matches("^[a-zA-ZÀ-ÿ\\\\s]+$")){
+                return ResponseEntity.badRequest().body("Nome não pode ter caracteres especiais!");
+            }
 
-        return ResponseEntity.ok(userRepository.save(user));
+            return ResponseEntity.ok(userRepository.save(user));
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar usuário!");
+        }
     }
 
     @GetMapping("/user-list")
     public ResponseEntity<?> listUsers(){
-       List<UserEntity> users = userRepository.findAll();
+       try{
+           List<UserEntity> users = userRepository.findAll();
 
-       if(users.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum usuário encontrado!");
+           if(users.isEmpty()){
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum usuário encontrado!");
+           }
+
+           List<UserResponseDTO> response = users.stream().map(user -> new UserResponseDTO(
+                   user.getName(),
+                   user.getEmail(),
+                   user.getType()
+           )).toList();
+
+           return ResponseEntity.ok(response);
+       }catch (Exception ex){
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar usuário!");
        }
-
-       List<UserResponseDTO> response = users.stream().map(user -> new UserResponseDTO(
-               user.getName(),
-               user.getEmail(),
-               user.getType()
-       )).toList();
-
-       return ResponseEntity.ok(response);
     }
 
     @PutMapping("/update-user/{id}")

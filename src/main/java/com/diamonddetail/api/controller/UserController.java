@@ -132,4 +132,27 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar o usuário!");
         }
     }
+
+    @DeleteMapping("/delete-user/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+
+        try{
+            Optional<UserEntity> optionalUser = userRepository.findById(id);
+
+            if(optionalUser.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+            }
+
+            UserEntity user = optionalUser.get();
+            if(!user.getId().equals(id)){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID do usuário não confere!");
+            }
+
+            userRepository.deleteById(id);
+            return ResponseEntity.ok("Usuário deletado com sucesso!");
+
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar o usuário!");
+        }
+    }
 }

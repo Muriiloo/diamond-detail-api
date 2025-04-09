@@ -1,7 +1,8 @@
 package com.diamonddetail.api.controller;
 
 import com.diamonddetail.api.entities.UserEntity;
-import com.diamonddetail.api.record.UserResponseDTO;
+import com.diamonddetail.api.record.users.UserBaseDTO;
+import com.diamonddetail.api.record.users.UserResponseDTO;
 import com.diamonddetail.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,9 +44,11 @@ public class UserController {
        }
 
        List<UserResponseDTO> response = users.stream().map(user -> new UserResponseDTO(
-               user.getName(),
-               user.getEmail(),
-               user.getType()
+               new UserBaseDTO(
+                       user.getName(),
+                       user.getEmail(),
+                       user.getType()
+               )
        )).toList();
 
        return ResponseEntity.ok(response);

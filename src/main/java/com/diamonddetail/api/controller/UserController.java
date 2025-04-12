@@ -4,6 +4,8 @@ import com.diamonddetail.api.entities.UserEntity;
 import com.diamonddetail.api.record.users.UserResponseDTO;
 import com.diamonddetail.api.record.users.UserUpdateDTO;
 import com.diamonddetail.api.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +16,15 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Usuários", description = "Operações relacionadas a usuário")
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
+
     @PostMapping("/create-user")
+    @Operation(summary = "Cria um novo usuário", description = "Rota para criar um novo usuário no sistema")
     public ResponseEntity<?> createUser(@RequestBody UserEntity user) {
         try{
             if(user.getName() == null || user.getName().isBlank()){
@@ -41,6 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/user-list")
+    @Operation(summary = "Lista os usuários cadastrados", description = "Rota para listar os usuários cadastrados do sistema")
     public ResponseEntity<?> listUsers(){
        try{
            List<UserEntity> users = userRepository.findAll();
@@ -62,6 +68,7 @@ public class UserController {
     }
 
     @PutMapping("/update-user/{id}")
+    @Operation(summary = "Altera um usuário pelo id", description = "Rota para alterar um usuário cadastrado no sistema")
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UserUpdateDTO userUpdateDTO){
         try {
             Optional<UserEntity> optionalUser = userRepository.findById(id);
@@ -102,6 +109,7 @@ public class UserController {
     }
 
     @PatchMapping("/update-patch-user/{id}")
+    @Operation(summary = "Altera um usuário pelo id", description = "Rota para alterar um usuário cadastrado no sistema")
     public ResponseEntity<?> updatePatchUser(@PathVariable Integer id, @RequestBody UserUpdateDTO userUpdateDTO) {
         try{
             Optional<UserEntity> optionalUser = userRepository.findById(id);
@@ -142,6 +150,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete-user/{id}")
+    @Operation(summary = "Deletar um usuário pelo id", description = "Rota para deletar um usuário cadastrado no sistema")
     public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
 
         try{

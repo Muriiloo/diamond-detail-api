@@ -1,6 +1,7 @@
 package com.diamonddetail.api.controller;
 
 import com.diamonddetail.api.entities.UserEntity;
+import com.diamonddetail.api.record.users.UserCreateDTO;
 import com.diamonddetail.api.record.users.UserResponseDTO;
 import com.diamonddetail.api.record.users.UserUpdateDTO;
 import com.diamonddetail.api.repository.UserRepository;
@@ -25,21 +26,23 @@ public class UserController {
 
     @PostMapping("/create-user")
     @Operation(summary = "Cria um novo usuário", description = "Rota para criar um novo usuário no sistema")
-    public ResponseEntity<?> createUser(@RequestBody UserEntity user) {
+    public ResponseEntity<?> createUser(@RequestBody UserCreateDTO user) {
         try{
-            if(user.getName() == null || user.getName().isBlank()){
+            if(user.name() == null || user.name().isBlank()){
                 return ResponseEntity.badRequest().body("Nome é obrigatório!");
             }
 
-            if(user.getName().length() < 3){
-                return ResponseEntity.badRequest().body("Nome precisa ter mais de 4 letras!");
+            if(user.name().length() < 3){
+                return ResponseEntity.badRequest().body("Nome precisa ter mais de 3 letras!");
             }
 
-            if(!user.getName().matches("^[a-zA-ZÀ-ÿ\\\\s]+$")){
+            if(!user.name().matches("^[a-zA-ZÀ-ÿ\\\\s]+$")){
                 return ResponseEntity.badRequest().body("Nome não pode ter caracteres especiais!");
             }
 
-            return ResponseEntity.ok(userRepository.save(user));
+            userRepository.save(user.toEntity());
+
+            return ResponseEntity.ok("Usuário criado com sucesso!");
         }catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar usuário!");
         }

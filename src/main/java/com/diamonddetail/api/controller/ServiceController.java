@@ -1,6 +1,7 @@
 package com.diamonddetail.api.controller;
 
 import com.diamonddetail.api.entities.ServiceEntity;
+import com.diamonddetail.api.record.services.ServiceCreateDTO;
 import com.diamonddetail.api.record.services.ServiceResponseDTO;
 import com.diamonddetail.api.record.services.ServiceUpdateDTO;
 import com.diamonddetail.api.record.users.UserUpdateDTO;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,21 +28,26 @@ public class ServiceController {
 
     @PostMapping("/create-service")
     @Operation(summary = "Cria um novo serviço", description = "Rota para criar um novo serviço no sistema")
-    public ResponseEntity<?> createService(@RequestBody ServiceEntity service){
+    public ResponseEntity<?> createService(@RequestBody ServiceCreateDTO service){
         try{
-            if(service.getName() == null || service.getName().isBlank()){
+            if(service.name() == null || service.name().isBlank()){
                 return ResponseEntity.badRequest().body("Digite o nome do service!");
             }
 
-            if(service.getName().length() < 3){
+            if(service.name().length() < 3){
                 return ResponseEntity.badRequest().body("O nome do serviço precisa ter mais de 3 caracteres!");
             }
 
-            if(!service.getName().matches("^[a-zA-ZÀ-ÿ\\s]+$")){
+            if(!service.name().matches("^[a-zA-ZÀ-ÿ\\s]+$")){
                 return ResponseEntity.badRequest().body("Nome do serviço não pode ter caracteres especiais!");
             }
 
-            return ResponseEntity.ok(serviceRepository.save(service));
+            if(service.price().compareTo(BigDecimal.ZERO) < 0){
+                return ResponseEntity.badRequest().body("O preço precisa ser maior que zero!");
+            }
+
+            serviceRepository.save(service.toEntity());
+            return ResponseEntity.ok("Serviço criado com sucesso!");
         }catch(Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar serviço!");
         }

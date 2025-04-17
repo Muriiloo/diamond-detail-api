@@ -30,6 +30,14 @@ public class UserService {
             throw new IllegalArgumentException("Nome não pode conter caracteres especiais!");
         }
 
+        if(user.password().length() < 3){
+            throw new IllegalArgumentException("Senha precisa ter 3 caracteres ou mais!");
+        }
+
+        if(user.email().length() < 5 && !user.email().contains("@")){
+            throw new IllegalArgumentException("Esse email é inválido!");
+        }
+
         userRepository.save(user.toEntity());
         return "Usuário criado com sucesso!";
     }

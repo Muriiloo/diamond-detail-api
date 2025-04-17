@@ -30,7 +30,10 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody UserCreateDTO user) {
         try{
             return ResponseEntity.ok(userService.createUser(user));
-        }catch (Exception ex){
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+        catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar ao usuário!");
         }
     }

@@ -20,7 +20,7 @@ import java.util.List;
 public class AppointmentEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;

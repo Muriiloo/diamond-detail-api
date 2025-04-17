@@ -18,7 +18,7 @@ import java.util.List;
 public class ServiceEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private BigDecimal price;

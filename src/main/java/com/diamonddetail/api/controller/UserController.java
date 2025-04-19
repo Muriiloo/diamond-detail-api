@@ -43,7 +43,10 @@ public class UserController {
     public ResponseEntity<?> listUsers(){
        try{
            return ResponseEntity.ok(userService.listUser());
-       }catch (Exception ex){
+       }catch (IllegalArgumentException ex){
+           return ResponseEntity.badRequest().body(ex.getMessage());
+       }
+       catch (Exception ex){
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar usuário!");
        }
     }
@@ -53,7 +56,10 @@ public class UserController {
     public ResponseEntity<?> updatePatchUser(@PathVariable Integer id, @RequestBody UserUpdateDTO userUpdateDTO) {
         try {
             return ResponseEntity.ok(userService.updateUser(id, userUpdateDTO));
-        }catch (Exception e){
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+        catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar o usuário.");
         }
     }
@@ -64,7 +70,10 @@ public class UserController {
 
         try{
             return ResponseEntity.ok(userService.deleteUser(id));
-        }catch (Exception ex){
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+        catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar o usuário!");
         }
     }

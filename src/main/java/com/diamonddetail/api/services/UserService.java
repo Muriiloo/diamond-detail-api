@@ -1,6 +1,7 @@
 package com.diamonddetail.api.services;
 
 import com.diamonddetail.api.entities.UserEntity;
+import com.diamonddetail.api.enums.UserType;
 import com.diamonddetail.api.record.users.UserCreateDTO;
 import com.diamonddetail.api.record.users.UserResponseDTO;
 import com.diamonddetail.api.record.users.UserUpdateDTO;
@@ -15,6 +16,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
 
     public String createUser(UserCreateDTO user){
 
@@ -34,8 +36,12 @@ public class UserService {
             throw new IllegalArgumentException("Senha precisa ter 3 caracteres ou mais!");
         }
 
-        if(user.email().length() < 5 && !user.email().contains("@")){
+        if(user.email().length() < 5 || !user.email().contains("@")){
             throw new IllegalArgumentException("Esse email é inválido!");
+        }
+
+        if(user.type() == null){
+            throw new IllegalArgumentException("O tipo precisa ser CLIENTE ou FUNCIONÁRIO!");
         }
 
         userRepository.save(user.toEntity());
